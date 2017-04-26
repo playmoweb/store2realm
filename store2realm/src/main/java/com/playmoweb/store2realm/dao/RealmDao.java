@@ -5,6 +5,7 @@ import com.playmoweb.store2store.utils.Filter;
 import com.playmoweb.store2store.utils.SortType;
 import com.playmoweb.store2store.utils.SortingMode;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UnknownFormatFlagsException;
 
@@ -180,6 +181,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
 
     /**
      * Pick the right realm method depending on filter
+     * @note    Repeating code is volonteer for performances (direct method call is faster than invoke())
      * @param query
      * @param key
      * @param kvp
@@ -188,20 +190,90 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
     private RealmQuery<T> addRealmFilter(RealmQuery<T> query, String key, Filter.KeyValuePair kvp) {
         switch (kvp.filterType) {
             case EQUAL:
-                return query.equalTo(key, kvp.value);
+                if(kvp.value instanceof String)
+                    return query.equalTo(key, (String) kvp.value);
+                if(kvp.value instanceof Integer)
+                    return query.equalTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.equalTo(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.equalTo(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.equalTo(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.equalTo(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.equalTo(key, (Byte) kvp.value);
             case NOT_EQUAL:
-                return query.notEqualTo(key, kvp.value);
+                if(kvp.value instanceof String)
+                    return query.equalTo(key, (String) kvp.value);
+                if(kvp.value instanceof Integer)
+                    return query.notEqualTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.notEqualTo(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.notEqualTo(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.notEqualTo(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.notEqualTo(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.notEqualTo(key, (Byte) kvp.value);
             case GREATER_THAN:
-                return query.greaterThan(key, Double.valueOf(kvp.value));
+                if(kvp.value instanceof Integer)
+                    return query.greaterThan(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.greaterThan(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.greaterThan(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.greaterThan(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.greaterThan(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.greaterThan(key, (Byte) kvp.value);
             case LESS_THAN:
-                return query.lessThan(key, Double.valueOf(kvp.value));
+                if(kvp.value instanceof Integer)
+                    return query.lessThan(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.lessThan(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.lessThan(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.lessThan(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.lessThan(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.lessThan(key, (Byte) kvp.value);
             case GREATER_THAN_OR_EQUAL:
-                return query.greaterThanOrEqualTo(key, Double.valueOf(kvp.value));
+                if(kvp.value instanceof Integer)
+                    return query.greaterThanOrEqualTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.greaterThanOrEqualTo(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.greaterThanOrEqualTo(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.greaterThanOrEqualTo(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.greaterThanOrEqualTo(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.greaterThanOrEqualTo(key, (Byte) kvp.value);
             case LESS_THAN_OR_EQUAL:
-                return query.greaterThanOrEqualTo(key, Double.valueOf(kvp.value));
+                if(kvp.value instanceof Integer)
+                    return query.greaterThanOrEqualTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Double)
+                    return query.greaterThanOrEqualTo(key, (Double) kvp.value);
+                if(kvp.value instanceof Date)
+                    return query.greaterThanOrEqualTo(key, (Date) kvp.value);
+                if(kvp.value instanceof Float)
+                    return query.greaterThanOrEqualTo(key, (Float) kvp.value);
+                if(kvp.value instanceof Long)
+                    return query.greaterThanOrEqualTo(key, (Long) kvp.value);
+                if(kvp.value instanceof Byte)
+                    return query.greaterThanOrEqualTo(key, (Byte) kvp.value);
         }
 
-        throw new UnknownFormatFlagsException("This type is unknow : " + kvp.filterType.toString());
+        throw new UnknownFormatFlagsException("Instance of the value is unknow or this type is unknow : " + kvp.filterType.toString());
     }
 
     /**

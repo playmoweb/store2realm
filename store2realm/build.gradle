@@ -32,7 +32,7 @@ dependencies {
     })
 
     compile "io.reactivex:rxandroid:1.2.1"
-    compile 'com.github.playmoweb:store2store:2.0.0'
+    compile 'com.github.playmoweb:store2store:2.0.1'
 
     testCompile 'junit:junit:4.12'
 }
