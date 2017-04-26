@@ -70,6 +70,15 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
     }
 
     /**
+     * Get one by id
+     * @param id
+     * @return
+     */
+    public Observable<T> getById(int id) {
+        return getOne(new Filter("id", id), null);
+    }
+
+    /**
      * Get all for a specific filters
      * @return
      */
@@ -109,16 +118,16 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
 
     /**
      * Insert or update all
-     * @param items
+     * @param objects
      * @return List of item copied from realm
      */
     @Override
-    public final Observable<List<T>> insertOrUpdate(List<T> items) {
+    public final Observable<List<T>> insertOrUpdate(List<T> objects) {
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        items = realm.copyToRealmOrUpdate(items);
+        objects = realm.copyToRealmOrUpdate(objects);
         realm.commitTransaction();
-        List<T> copies = realm.copyFromRealm(items);
+        List<T> copies = realm.copyFromRealm(objects);
         realm.close();
 
         return Observable.just(copies);
@@ -126,16 +135,26 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
 
     /**
      * Remove only these items
-     * @param items
+     * @param objects
      * @return List of item copied from realm
      */
     @Override
-    public final Observable<Void> delete(List<T> items) {
-        for(T elem : items) {
-            if(elem.isManaged()) {
-                elem.deleteFromRealm(); // potentially slow
+    public final Observable<Void> delete(List<T> objects) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        for(T obj : objects) {
+            if(obj.isManaged()) {
+                obj.deleteFromRealm(); // potentially slow
+            } else {
+                T managedObject = realm.copyToRealmOrUpdate(obj);
+                managedObject.deleteFromRealm();
             }
         }
+
+        realm.commitTransaction();
+        realm.close();
+
         return Observable.just(null);
     }
 
@@ -143,6 +162,13 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
     public final Observable<Void> delete(T object) {
         if(object.isManaged()) {
             object.deleteFromRealm();
+        } else {
+            Realm realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            T managedObject = realm.copyToRealmOrUpdate(object);
+            managedObject.deleteFromRealm();
+            realm.commitTransaction();
+            realm.close();
         }
         return Observable.just(null);
     }
