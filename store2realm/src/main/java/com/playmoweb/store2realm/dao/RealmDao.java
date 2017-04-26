@@ -194,6 +194,8 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
                     return query.equalTo(key, (String) kvp.value);
                 if(kvp.value instanceof Integer)
                     return query.equalTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Boolean)
+                    return query.equalTo(key, (Boolean) kvp.value);
                 if(kvp.value instanceof Double)
                     return query.equalTo(key, (Double) kvp.value);
                 if(kvp.value instanceof Date)
@@ -206,9 +208,11 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
                     return query.equalTo(key, (Byte) kvp.value);
             case NOT_EQUAL:
                 if(kvp.value instanceof String)
-                    return query.equalTo(key, (String) kvp.value);
+                    return query.notEqualTo(key, (String) kvp.value);
                 if(kvp.value instanceof Integer)
                     return query.notEqualTo(key, (Integer) kvp.value);
+                if(kvp.value instanceof Boolean)
+                    return query.notEqualTo(key, (Boolean) kvp.value);
                 if(kvp.value instanceof Double)
                     return query.notEqualTo(key, (Double) kvp.value);
                 if(kvp.value instanceof Date)
