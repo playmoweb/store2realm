@@ -65,15 +65,6 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return
      */
     @Override
-    public Observable<T> getById(String id) {
-        return getOne(new Filter("id", id), null);
-    }
-
-    /**
-     * Get one by id
-     * @param id
-     * @return
-     */
     public Observable<T> getById(int id) {
         return getOne(new Filter("id", id), null);
     }

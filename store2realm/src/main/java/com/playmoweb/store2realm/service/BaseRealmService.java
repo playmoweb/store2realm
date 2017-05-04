@@ -44,7 +44,7 @@ public abstract class BaseRealmService<T extends RealmObject> extends AbstractSe
     }
 
     @Override
-    protected Observable<T> getById(String id) {
+    protected Observable<T> getById(int id) {
         return null;
     }
 

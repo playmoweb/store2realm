@@ -1,8 +1,8 @@
 package com.playmoweb.store2realm.mock;
 
-import com.playmoweb.store2realm.service.api.AbstractService;
-import com.playmoweb.store2realm.utils.Filter;
-import com.playmoweb.store2realm.utils.SortingMode;
+import com.playmoweb.store2store.service.AbstractService;
+import com.playmoweb.store2store.utils.Filter;
+import com.playmoweb.store2store.utils.SortingMode;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class MemoryService extends AbstractService<TestModel> {
     }
 
     @Override
-    protected Observable<TestModel> getById(String id) {
+    protected Observable<TestModel> getById(int id) {
         return myCustomAPI.getById(id);
     }
 
