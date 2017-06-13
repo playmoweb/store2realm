@@ -41,11 +41,13 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         RealmQuery<T> query = realm.where(clazz);
         query = filterToQuery(filter, query);
 
-        T item;
+        T item = null;
 
         if(sortingMode != null) {
             RealmResults<T> items = query.findAllSorted(sortingMode.key, convertToSort(sortingMode.sort));
-            item = items.first();
+            if(!items.isEmpty()){
+                item = items.first();
+            }
         } else {
             item = query.findFirst();
         }
