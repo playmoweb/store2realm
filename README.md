@@ -95,4 +95,4 @@ private final CustomObserver<List<MyObjectModel>> getAllMyObjectObserver = new C
     }
 };
 ````
-
+#See more: https://blog.playmoweb.com/caching-and-synchronization-with-realm-retrofit2-and-rxjava-on-android-aba8e43e66c4
