@@ -1,14 +1,14 @@
 package com.playmoweb.store2realm.service;
 
-import com.playmoweb.store2realm.dao.RealmDao;
+import com.playmoweb.store2store.dao.IStoreDao;
 import com.playmoweb.store2store.service.AbstractService;
 import com.playmoweb.store2store.utils.Filter;
 import com.playmoweb.store2store.utils.SortingMode;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.realm.RealmObject;
-import rx.Observable;
 
 /**
  * This class try to facilitate usage of Realm with any other async storage system.
@@ -17,20 +17,19 @@ import rx.Observable;
  * @author  Thibaud Giovannetti
  * @by      Playmoweb
  * @date    31/01/2017
+ *
+ * @update  hoanghiep
+ * @date    28/07/2017
  */
 public abstract class BaseRealmService<T extends RealmObject> extends AbstractService<T> {
-
     /**
      * Public constructor
+     *
      * @param clazz
+     * @param storage
      */
-    public BaseRealmService(Class<T> clazz) {
-        super(clazz, new RealmDao<T>(clazz));
-    }
-
-    @Override
-    protected Observable<Void> deleteAll() {
-        return null;
+    public BaseRealmService(Class<T> clazz, IStoreDao<T> storage) {
+        super(clazz, storage);
     }
 
     @Override
@@ -75,6 +74,11 @@ public abstract class BaseRealmService<T extends RealmObject> extends AbstractSe
 
     @Override
     protected Observable<Void> delete(T object) {
+        return null;
+    }
+
+    @Override
+    protected Observable<Void> deleteAll() {
         return null;
     }
 }
