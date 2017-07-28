@@ -31,7 +31,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.github.playmoweb:store2store:rxjava2-SNAPSHOT'
+    compile 'com.github.playmoweb:store2store:9c22858e00'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     testCompile 'junit:junit:4.12'
 }

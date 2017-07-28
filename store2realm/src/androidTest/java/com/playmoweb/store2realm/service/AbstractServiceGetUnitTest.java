@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 /**
  * Test all get operations
@@ -21,7 +21,7 @@ import rx.subscriptions.CompositeSubscription;
 @RunWith(AndroidJUnit4.class)
 public class AbstractServiceGetUnitTest {
 
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final CompositeDisposable subscriptions = new CompositeDisposable();
     private MemoryService service = new MemoryService(TestModel.class);
 
     @Before
