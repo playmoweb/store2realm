@@ -1,6 +1,6 @@
 package com.playmoweb.store2realm.service;
 
-import com.playmoweb.store2store.dao.IStoreDao;
+import com.playmoweb.store2realm.dao.RealmDao;
 import com.playmoweb.store2store.service.AbstractService;
 import com.playmoweb.store2store.utils.Filter;
 import com.playmoweb.store2store.utils.SortingMode;
@@ -26,10 +26,9 @@ public abstract class BaseRealmService<T extends RealmObject> extends AbstractSe
      * Public constructor
      *
      * @param clazz
-     * @param storage
      */
-    public BaseRealmService(Class<T> clazz, IStoreDao<T> storage) {
-        super(clazz, storage);
+    public BaseRealmService(Class<T> clazz) {
+        super(clazz, new RealmDao<>(clazz));
     }
 
     @Override
