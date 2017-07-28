@@ -1,3 +1,5 @@
+*This version use RxJava 1.x, there is another branch for RxJava 2.x !*
+
 ## About
 
 Store2Realm simplify the synchronization between a store (eg: a distant API) with a local Realm datastore on android.
