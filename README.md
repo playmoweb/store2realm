@@ -1,3 +1,5 @@
+This branch is not stable yet. It will be stabilized and merged into master soon.
+
 ## About
 
 Store2Realm simplify the synchronization between a store (eg: a distant API) with a local Realm datastore on android.
