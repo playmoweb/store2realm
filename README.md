@@ -71,12 +71,10 @@ private final MyObjectModelService myObjectService; // injected by dagger in the
 
 public void loadAllMyObjects() {
     // no filter and no sortingMode
-    final Subscription s = myObjectService.getAll(null, null, getAllMyObjectObserver)
+    disposables.add(myObjectService.getAll(null, null, getAllMyObjectObserver)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .subscribe(getAllMyObjectObserver);
-
-    subscriptions.add(s);
+            .subscribe(getAllMyObjectObserver));
 }
 
 /**
