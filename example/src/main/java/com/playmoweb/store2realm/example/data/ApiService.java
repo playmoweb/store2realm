@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,9 +25,18 @@ public interface ApiService {
         private Creator() {}
 
         public static ApiService buildApiService() {
+
+
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            OkHttpClient clientOkHttp = new OkHttpClient.Builder()
+                    .addInterceptor(interceptor)
+                    .build();
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://jsonplaceholder.typicode.com")
-                    .client(new OkHttpClient.Builder().build())
+                    .client(clientOkHttp)
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

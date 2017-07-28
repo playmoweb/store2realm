@@ -1,7 +1,5 @@
 package com.playmoweb.store2realm.example.ui;
 
-import android.util.Log;
-
 import com.playmoweb.store2realm.example.data.models.Post;
 import com.playmoweb.store2realm.example.data.services.PostService;
 import com.playmoweb.store2store.utils.CustomObserver;
@@ -40,16 +38,16 @@ public class MainPresenter {
     }
 
     public void loadPosts(){
-        postService.getAll(observerForPosts)
+        disposable.add(postService.getAll(observerForPosts)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(observerForPosts);
+                .subscribeWith(observerForPosts));
     }
 
-    CustomObserver<List<Post>> observerForPosts = new CustomObserver<List<Post>>(disposable) {
+    CustomObserver<List<Post>> observerForPosts = new CustomObserver<List<Post>>() {
         @Override
         public void onError(Throwable throwable, boolean updated) {
-            Log.e("MainPresenter", throwable.getMessage());
+            throwable.printStackTrace();
         }
 
         @Override
