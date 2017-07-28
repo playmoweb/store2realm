@@ -3,6 +3,7 @@ package com.playmoweb.store2realm.service;
 import com.playmoweb.store2realm.dao.RealmDao;
 import com.playmoweb.store2store.service.AbstractService;
 import com.playmoweb.store2store.utils.Filter;
+import com.playmoweb.store2store.utils.NullObject;
 import com.playmoweb.store2store.utils.SortingMode;
 
 import java.util.List;
@@ -67,17 +68,17 @@ public abstract class BaseRealmService<T extends RealmObject> extends AbstractSe
     }
 
     @Override
-    protected Observable<Void> delete(List<T> items) {
+    protected Observable<NullObject> delete(List<T> items) {
         return null;
     }
 
     @Override
-    protected Observable<Void> delete(T object) {
+    protected Observable<NullObject> delete(T object) {
         return null;
     }
 
     @Override
-    protected Observable<Void> deleteAll() {
+    protected Observable<NullObject> deleteAll() {
         return null;
     }
 }

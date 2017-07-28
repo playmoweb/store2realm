@@ -2,6 +2,7 @@ package com.playmoweb.store2realm.dao;
 
 import com.playmoweb.store2store.dao.IStoreDao;
 import com.playmoweb.store2store.utils.Filter;
+import com.playmoweb.store2store.utils.NullObject;
 import com.playmoweb.store2store.utils.SortType;
 import com.playmoweb.store2store.utils.SortingMode;
 
@@ -130,7 +131,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return List of item copied from realm
      */
     @Override
-    public Observable<Void> delete(List<T> items) {
+    public Observable<NullObject> delete(List<T> items) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
@@ -146,11 +147,11 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         realm.commitTransaction();
         realm.close();
 
-        return Observable.just(null);
+        return Observable.just(new NullObject());
     }
 
     @Override
-    public Observable<Void> delete(T object) {
+    public Observable<NullObject> delete(T object) {
         if(object.isManaged()) {
             object.deleteFromRealm();
         } else {
@@ -161,18 +162,18 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
             realm.commitTransaction();
             realm.close();
         }
-        return Observable.just(null);
+        return Observable.just(new NullObject());
     }
 
     @Override
-    public Observable<Void> deleteAll() {
+    public Observable<NullObject> deleteAll() {
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.delete(clazz);
         realm.commitTransaction();
         realm.close();
 
-        return Observable.just(null);
+        return Observable.just(new NullObject());
     }
 
     /**************************************************************************
