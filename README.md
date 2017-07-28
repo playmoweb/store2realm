@@ -1,4 +1,4 @@
-This branch is not stable yet. It will be stabilized and merged into master soon.
+* If you are looking for a version with rxjava 1.x, please use the master branch for now *
 
 ## About
 
