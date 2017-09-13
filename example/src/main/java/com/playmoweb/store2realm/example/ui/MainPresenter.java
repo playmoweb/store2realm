@@ -15,9 +15,10 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
-
 public class MainPresenter {
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final PostService postService;

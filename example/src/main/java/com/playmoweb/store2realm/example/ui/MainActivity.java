@@ -17,6 +17,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
+ */
 public class MainActivity extends AppCompatActivity implements MainView {
 
     @Inject
