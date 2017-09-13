@@ -1,6 +1,6 @@
 package com.playmoweb.store2realm.dao;
 
-import com.playmoweb.store2realm.model.StoreRealmObject;
+import com.playmoweb.store2realm.model.HasId;
 import com.playmoweb.store2store.store.Optional;
 import com.playmoweb.store2store.store.StoreDao;
 import com.playmoweb.store2store.utils.Filter;
@@ -15,6 +15,7 @@ import java.util.UnknownFormatFlagsException;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -25,7 +26,7 @@ import io.realm.Sort;
  * @by      Playmoweb
  * @date    08/02/2017
  */
-public class RealmDao<T extends StoreRealmObject> extends StoreDao<T> {
+public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
     protected  Class<T> clazz;
 
     public RealmDao(Class<T> clazz) {
