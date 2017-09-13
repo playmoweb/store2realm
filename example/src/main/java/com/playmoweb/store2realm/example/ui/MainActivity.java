@@ -48,14 +48,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void updatePosts(List<Post> posts, boolean updated){
+    public void updatePosts(List<Post> posts){
         updateAdapter(posts);
-
-        if(updated){
-            Toast.makeText(this, "Datas updated ! Kill and relaunch the app to see the realm cache operate !", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Datas come from realm cache", Toast.LENGTH_LONG).show();
-        }
+        Toast.makeText(this, "UI refreshed with datas", Toast.LENGTH_LONG).show();
     }
 
     private void updateAdapter(List<Post> posts){

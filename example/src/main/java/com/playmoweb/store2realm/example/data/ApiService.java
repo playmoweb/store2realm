@@ -5,7 +5,7 @@ import com.playmoweb.store2realm.example.data.models.Post;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -19,7 +19,7 @@ import retrofit2.http.GET;
 public interface ApiService {
 
     @GET("/posts")
-    Observable<List<Post>> getPosts();
+    Flowable<List<Post>> getPosts();
 
     final class Creator {
         private Creator() {}
