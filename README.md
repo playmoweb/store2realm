@@ -1,4 +1,8 @@
-* If you are looking for a version with rxjava 1.x, please use the master branch for now *
+# Rxjava2 Store2Realm
+
+This is the new version of Store2Realm. This version is incompatible with previous versions.
+
+*If you are looking for a version with rxjava 1.x, please use the rxjava1 branch. The API is different !*
 
 ## About
 
@@ -24,6 +28,12 @@ compile 'com.github.playmoweb:store2realm:<TAG>'
 ```
 
 
+## Example
+
+You can try/browse the example in the repository. This example connect to a remote API and load all posts from it.
+
+It demonstrate the cache of Realm (try it offline after first launch) which is synchronized with the initial call to the API.
+
 ## Usage
 
 This is an example of a sync between an API and a local Realm storage.
@@ -33,7 +43,7 @@ This is an example of a sync between an API and a local Realm storage.
 
 
 ```java
-public class MyObjectModelService extends BaseRealmService<MyObjectModel> {
+public class PostService extends StoreService<Post> {
     
 }
 ```
@@ -47,19 +57,40 @@ This example use Dagger for the injection and the attribut ApiService is a Retro
 We implement the getAll method from the RealmService to point to our API. This method can call any kind of service (file, sql, ...), it doesn't matter.
 
 ```java
-public class MyObjectModelService extends BaseRealmService<MyObjectModel> {
-    private final ApiService apiService;
+@Parcel(implementations = { PostRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { Post.class })
+public class Post extends RealmObject implements HasId {
+    // ...
+}
+
+// The service and its DAO
+public class PostService extends StoreService<Post> {
 
     @Inject
-    public MyObjectModelService(ApiService apiService) {
-        super(MyObjectModel.class);
-        this.apiService = apiService;
+    public PostService(ApiService apiService) {
+        super(Post.class, new PostDao(apiService));
+        
+        // things happen here !
+        // We will sync this Store (external APIStore) to a RealmStore.
+        // Every changes applied to the API will be reflected in the Realm store (cache)
+        this.syncWith(new BaseRealmService<>(Post.class));
     }
 
-    @Override
-    protected Observable<List<MyObjectModel>> getAll(Filter filter, SortingMode sortingMode) {
-        // in this example the filter object and the sortingMode are not used
-        return apiService.getAllMyObject(); // return an Observable<List<MyObjectModel>>
+    // DAO impl
+    public static class PostDao extends StoreDao<Post> {
+        private final ApiService apiService;
+
+        public PostDao(ApiService apiService) {
+            this.apiService = apiService;
+        }
+
+        @Override
+        public Flowable<Optional<List<Post>>> getAll(Filter filter, SortingMode sortingMode) {
+            // If you use retrofit you can wrap the response directly in a
+            // Optional object by default
+            return wrapOptional(apiService.getPosts());
+        }
     }
 }
 ```
@@ -67,38 +98,30 @@ public class MyObjectModelService extends BaseRealmService<MyObjectModel> {
 3. Call from your presenter (MVP) your service
 
 ```java
-private final MyObjectModelService myObjectService; // injected by dagger in the constructor
+    private final PostService postService; // injected by dagger in the constructor
 
-public void loadAllMyObjects() {
-    // no filter and no sortingMode
-    disposables.add(myObjectService.getAll(null, null, getAllMyObjectObserver)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(getAllMyObjectObserver));
-}
+    public void loadPosts() {
+        Disposable d = postService.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Optional<List<Post>>>(){
+                    @Override
+                    public void onNext(Optional<List<Post>> items) {
+                        mainView.updatePosts(items.get()); // refresh the UI
+                    }
 
-/**
-* We create a CustomObserver to handle callbacks from the library.
-*/
-private final CustomObserver<List<MyObjectModel>> getAllMyObjectObserver = new CustomObserver<List<MyObjectModel>>() {
-    @Override
-    public void onError(Throwable e, boolean isUpdated) {
-        // Log the error if needed
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace(); // do something here
+                    }
+
+                    @Override
+                    public void onComplete() { }
+                });
+
+        disposable.add(d);
     }
-
-    @Override
-    public void onNext(List<MyObjectModel> d, boolean isUpdated) {
-        // This method will be fired twice :
-        //     - The first call will come from Realm and isUpdated will be false
-        //     - The second call will come from our API and after the sync with Realm.
-        //       The datas will be fresh and fully updated. 
-    }
-};
 ````
-
-
-## See more 
-https://blog.playmoweb.com/caching-and-synchronization-with-realm-retrofit2-and-rxjava-on-android-aba8e43e66c4
 
 
 ## Contributors

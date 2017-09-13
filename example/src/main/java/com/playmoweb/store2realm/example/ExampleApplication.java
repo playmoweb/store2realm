@@ -11,7 +11,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
 public class ExampleApplication extends Application {
     ApplicationComponent mApplicationComponent;

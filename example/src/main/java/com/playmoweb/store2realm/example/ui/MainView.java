@@ -5,7 +5,9 @@ import com.playmoweb.store2realm.example.data.models.Post;
 import java.util.List;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
 public interface MainView {
     void updatePosts(List<Post> posts);

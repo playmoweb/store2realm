@@ -14,7 +14,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
 public interface ApiService {
 
@@ -25,8 +27,6 @@ public interface ApiService {
         private Creator() {}
 
         public static ApiService buildApiService() {
-
-
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 

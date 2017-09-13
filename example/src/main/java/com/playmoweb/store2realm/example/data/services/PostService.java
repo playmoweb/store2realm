@@ -16,7 +16,9 @@ import javax.inject.Inject;
 import io.reactivex.Flowable;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
 public class PostService extends StoreService<Post> {
 
@@ -38,7 +40,12 @@ public class PostService extends StoreService<Post> {
 
         @Override
         public Flowable<Optional<List<Post>>> getAll(Filter filter, SortingMode sortingMode) {
+            // you can wrap the retrofit response directly in a
+            // Optional object by default for more convenience
             return wrapOptional(apiService.getPosts());
         }
+
+        // other methods are not implemented because we don't
+        // need them in this example and it's perfectly fine
     }
 }

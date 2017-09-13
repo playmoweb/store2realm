@@ -9,7 +9,9 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by thibaud on 28/07/2017.
+ * @author  Thibaud Giovannetti
+ * @by      Playmoweb
+ * @date    10/09/2017
  */
 @Parcel(implementations = { PostRealmProxy.class },
         value = Parcel.Serialization.BEAN,
