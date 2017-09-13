@@ -1,1 +1,1 @@
-include ':store2realm'
+include ':store2realm', ':example'

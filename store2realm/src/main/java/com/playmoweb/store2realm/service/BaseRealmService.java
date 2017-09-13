@@ -1,14 +1,10 @@
 package com.playmoweb.store2realm.service;
 
 import com.playmoweb.store2realm.dao.RealmDao;
-import com.playmoweb.store2store.service.AbstractService;
-import com.playmoweb.store2store.utils.Filter;
-import com.playmoweb.store2store.utils.SortingMode;
-
-import java.util.List;
+import com.playmoweb.store2realm.model.HasId;
+import com.playmoweb.store2store.store.StoreService;
 
 import io.realm.RealmObject;
-import rx.Observable;
 
 /**
  * This class try to facilitate usage of Realm with any other async storage system.
@@ -18,63 +14,13 @@ import rx.Observable;
  * @by      Playmoweb
  * @date    31/01/2017
  */
-public abstract class BaseRealmService<T extends RealmObject> extends AbstractService<T> {
-
+public class BaseRealmService<T extends RealmObject & HasId> extends StoreService<T> {
     /**
      * Public constructor
+     *
      * @param clazz
      */
     public BaseRealmService(Class<T> clazz) {
-        super(clazz, new RealmDao<T>(clazz));
-    }
-
-    @Override
-    protected Observable<Void> deleteAll() {
-        return null;
-    }
-
-    @Override
-    protected Observable<List<T>> getAll(Filter filter, SortingMode sortingMode) {
-        return null;
-    }
-
-    @Override
-    protected Observable<T> getOne(Filter filter, SortingMode sortingMode) {
-        return null;
-    }
-
-    @Override
-    protected Observable<T> getById(int id) {
-        return null;
-    }
-
-    @Override
-    protected Observable<T> insert(T object) {
-        return null;
-    }
-
-    @Override
-    protected Observable<List<T>> insert(List<T> items) {
-        return null;
-    }
-
-    @Override
-    protected Observable<T> update(T object) {
-        return null;
-    }
-
-    @Override
-    protected Observable<List<T>> update(List<T> items) {
-        return null;
-    }
-
-    @Override
-    protected Observable<Void> delete(List<T> items) {
-        return null;
-    }
-
-    @Override
-    protected Observable<Void> delete(T object) {
-        return null;
+        super(clazz, new RealmDao<>(clazz));
     }
 }
