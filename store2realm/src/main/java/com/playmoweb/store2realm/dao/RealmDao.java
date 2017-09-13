@@ -1,8 +1,10 @@
 package com.playmoweb.store2realm.dao;
 
-import com.playmoweb.store2store.dao.IStoreDao;
+import com.playmoweb.store2realm.model.StoreRealmObject;
+import com.playmoweb.store2store.store.Optional;
+import com.playmoweb.store2store.store.StoreDao;
 import com.playmoweb.store2store.utils.Filter;
-import com.playmoweb.store2store.utils.NullObject;
+import com.playmoweb.store2store.utils.FilterType;
 import com.playmoweb.store2store.utils.SortType;
 import com.playmoweb.store2store.utils.SortingMode;
 
@@ -10,9 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UnknownFormatFlagsException;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import io.realm.Realm;
-import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -22,11 +24,8 @@ import io.realm.Sort;
  * @author  Thibaud Giovannetti
  * @by      Playmoweb
  * @date    08/02/2017
- *
- * @update  hoanghiep
- * @date    28/07/2017
  */
-public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
+public class RealmDao<T extends StoreRealmObject> extends StoreDao<T> {
     protected  Class<T> clazz;
 
     public RealmDao(Class<T> clazz) {
@@ -38,7 +37,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return
      */
     @Override
-    public Observable<List<T>> getAll(Filter filter, SortingMode sortingMode) {
+    public Flowable<Optional<List<T>>> getAll(Filter filter, SortingMode sortingMode) {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery<T> query = realm.where(clazz);
         query = filterToQuery(filter, query);
@@ -52,7 +51,27 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         List<T> copies = realm.copyFromRealm(items);
         realm.close();
 
-        return Observable.just(copies);
+        return Flowable.just(Optional.wrap(copies));
+    }
+
+    @Override
+    public Flowable<Optional<List<T>>> getAll(List<T> items) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<T> query = realm.where(clazz);
+
+        if(items.size() > 0){
+            String paramName = items.get(0).getUniqueIdentifierName();
+            Integer[] keys = new Integer[items.size()];
+            for(int i = 0; i < items.size(); i++){
+                keys[i] = items.get(i).getUniqueIdentifier();
+            }
+            query.in(paramName, keys);
+        }
+
+        List<T> copies = realm.copyFromRealm(query.findAll());
+        realm.close();
+
+        return Flowable.just(Optional.wrap(copies));
     }
 
     /**
@@ -61,7 +80,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return
      */
     @Override
-    public Observable<T> getOne(Filter filter, SortingMode sortingMode) {
+    public Flowable<Optional<T>> getOne(Filter filter, SortingMode sortingMode) {
         Realm realm = Realm.getDefaultInstance();
         RealmQuery<T> query = realm.where(clazz);
         query = filterToQuery(filter, query);
@@ -79,7 +98,12 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
             copy = realm.copyFromRealm(item);
         }
         realm.close();
-        return Observable.just(copy);
+        return Flowable.just(Optional.wrap(copy));
+    }
+
+    @Override
+    public Flowable<Optional<T>> getOne(T item) {
+        return getOne(new Filter(item.getUniqueIdentifierName(), FilterType.EQUAL), null);
     }
 
     /**
@@ -88,7 +112,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return
      */
     @Override
-    public Observable<T> getById(int id) {
+    public Flowable<Optional<T>> getById(int id) {
         return getOne(new Filter("id", id), null);
     }
 
@@ -97,7 +121,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return object inserted
      */
     @Override
-    public Observable<T> insertOrUpdate(T object) {
+    public Flowable<Optional<T>> insertOrUpdate(T object) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         T inserted = realm.copyToRealmOrUpdate(object);
@@ -105,7 +129,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         T copy = realm.copyFromRealm(inserted);
         realm.close();
 
-        return Observable.just(copy);
+        return Flowable.just(Optional.wrap(copy));
     }
 
     /**
@@ -114,7 +138,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return List of item copied from realm
      */
     @Override
-    public Observable<List<T>> insertOrUpdate(List<T> items) {
+    public Flowable<Optional<List<T>>> insertOrUpdate(List<T> items) {
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         items = realm.copyToRealmOrUpdate(items);
@@ -122,7 +146,45 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         List<T> copies = realm.copyFromRealm(items);
         realm.close();
 
-        return Observable.just(copies);
+        return Flowable.just(Optional.wrap(copies));
+    }
+
+    @Override
+    public Flowable<Optional<T>> insert(T item) {
+        return insertOrUpdate(item);
+    }
+
+    @Override
+    public Flowable<Optional<List<T>>> insert(List<T> items) {
+        return insertOrUpdate(items);
+    }
+
+    @Override
+    public Flowable<Optional<T>> update(final T item) {
+        return getOne(item)
+                .flatMap(new Function<Optional<T>, Flowable<Optional<T>>>() {
+                    @Override
+                    public Flowable<Optional<T>> apply(Optional<T> foundOrNull) throws Exception {
+                        if(foundOrNull.isNull()){
+                            return Flowable.error(new IllegalArgumentException("This item does not exist, you can't update it. You can use insertOrUpdate instead !"));
+                        }
+                        return insertOrUpdate(item);
+                    }
+                });
+    }
+
+    @Override
+    public Flowable<Optional<List<T>>> update(final List<T> items) {
+        return getAll(items)
+                .flatMap(new Function<Optional<List<T>>, Flowable<Optional<List<T>>>>() {
+                    @Override
+                    public Flowable<Optional<List<T>>> apply(Optional<List<T>> foundOrNull) throws Exception {
+                        if(foundOrNull.isNull() || foundOrNull.get().size() < items.size()){
+                            return Flowable.error(new IllegalArgumentException("One or more items do not exist, you can't update them. You can use insertOrUpdate instead !"));
+                        }
+                        return insertOrUpdate(items);
+                    }
+                });
     }
 
     /**
@@ -131,7 +193,7 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
      * @return List of item copied from realm
      */
     @Override
-    public Observable<NullObject> delete(List<T> items) {
+    public Flowable<Integer> delete(List<T> items) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
@@ -147,11 +209,11 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
         realm.commitTransaction();
         realm.close();
 
-        return Observable.just(new NullObject());
+        return Flowable.just(items.size());
     }
 
     @Override
-    public Observable<NullObject> delete(T object) {
+    public Flowable<Integer> delete(T object) {
         if(object.isManaged()) {
             object.deleteFromRealm();
         } else {
@@ -162,18 +224,20 @@ public class RealmDao<T extends RealmObject> implements IStoreDao<T> {
             realm.commitTransaction();
             realm.close();
         }
-        return Observable.just(new NullObject());
+        return Flowable.just(1);
     }
 
     @Override
-    public Observable<NullObject> deleteAll() {
+    public Flowable<Integer> deleteAll() {
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
+        RealmQuery<T> query = realm.where(clazz);
+        long count = query.count();
         realm.delete(clazz);
         realm.commitTransaction();
         realm.close();
 
-        return Observable.just(new NullObject());
+        return Flowable.just((int)count);
     }
 
     /**************************************************************************
