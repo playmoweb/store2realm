@@ -1,4 +1,4 @@
-## store2store contributors
+## store2ream contributors
 In contributing order
 
 * **[Thibaud Giovannetti](https://github.com/tspoke)**
@@ -6,10 +6,6 @@ In contributing order
   * Author and maintainer
   * Most features development
   
-
-* **[Hoang Hiep](https://github.com/hoanghiephui)**
-
-  * Port the library to RxJava2
   
 
 
