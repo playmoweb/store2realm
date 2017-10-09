@@ -3,6 +3,9 @@ package com.playmoweb.store2realm.example.ui;
 import com.playmoweb.store2realm.example.data.models.Post;
 import com.playmoweb.store2realm.example.data.services.PostService;
 import com.playmoweb.store2store.store.Optional;
+import com.playmoweb.store2store.utils.Filter;
+import com.playmoweb.store2store.utils.SortType;
+import com.playmoweb.store2store.utils.SortingMode;
 
 import java.util.List;
 
@@ -40,8 +43,15 @@ public class MainPresenter {
         mainView = view;
     }
 
-    public void loadPosts() {
-        Disposable d = postService.getAll()
+    public void loadPosts(boolean filterAndSortPosts) {
+        SortingMode sortingMode = null;
+        Filter filter = null;
+        if(filterAndSortPosts){
+            sortingMode = new SortingMode("userId", SortType.ASCENDING);
+            filter = new Filter("userId", 5);
+        }
+
+        Disposable d = postService.getAll(filter, sortingMode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Optional<List<Post>>>(){

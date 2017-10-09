@@ -10,6 +10,7 @@ import com.playmoweb.store2store.utils.SortingMode;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UnknownFormatFlagsException;
 
 import io.reactivex.Flowable;
@@ -44,8 +45,8 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
         query = filterToQuery(filter, query);
 
         RealmResults<T> items;
-        if(sortingMode != null) {
-            items = query.findAllSorted(sortingMode.key, convertToSort(sortingMode.sort));
+        if(sortingMode != null && sortingMode.entries.size() > 0) {
+            items = applySortingMode(sortingMode, query);
         } else {
             items = query.findAll();
         }
@@ -87,7 +88,7 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
         query = filterToQuery(filter, query);
         T item = null;
         if (sortingMode != null) {
-            RealmResults<T> items = query.findAllSorted(sortingMode.key, convertToSort(sortingMode.sort));
+            RealmResults<T> items = applySortingMode(sortingMode, query);
             if (!items.isEmpty()) {
                 item = items.first();
             }
@@ -369,6 +370,49 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
      * @return
      */
     private Sort convertToSort(SortType st) {
-        return st == SortType.ASCENDING ? Sort.ASCENDING : Sort.DESCENDING;
+        return st == null || st == SortType.ASCENDING ? Sort.ASCENDING : Sort.DESCENDING;
+    }
+
+    private RealmResults<T> applySortingMode(SortingMode sm, RealmQuery<T> query){
+        KeysAndSorts keysAndSorts = convertSortingMode(sm);
+        if(keysAndSorts != null){
+            return query.findAllSortedAsync(keysAndSorts.key, keysAndSorts.sort);
+        }
+        return query.findAll();
+    }
+
+    /**
+     * Convert a Store2Store SortingMode into a class object of Sort[] with String[]
+     */
+    private KeysAndSorts convertSortingMode(SortingMode sm){
+        if(sm == null || sm.entries == null || sm.entries.size() == 0){
+            return null;
+        }
+
+        final int size = sm.entries.size();
+        String[] keys = new String[size];
+        Sort[] sorts = new Sort[size];
+
+        int i = 0;
+        for(Map.Entry<String, SortType> item: sm.entries){
+            keys[i] = item.getKey();
+            sorts[i] = convertToSort(item.getValue());
+            i++;
+        }
+
+        return new KeysAndSorts(keys, sorts);
+    }
+
+    /**
+     * Key and Sort container
+     */
+    static private class KeysAndSorts {
+        private final String[] key;
+        private final Sort[] sort;
+
+        public KeysAndSorts(String[] key, Sort[] sort) {
+            this.key = key;
+            this.sort = sort;
+        }
     }
 }
