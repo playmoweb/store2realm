@@ -2,7 +2,9 @@ package com.playmoweb.store2realm.example.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     MainPresenter mainPresenter;
 
     private ListView listOfPosts;
+    private Button allButton;
+    private Button filteredButton;
+
     private ArrayAdapter<String> adapter;
 
     @Override
@@ -39,11 +44,34 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainPresenter.attachView(this);
 
         listOfPosts = findViewById(R.id.listOfPosts);
+        allButton = findViewById(R.id.allButton);
+        filteredButton = findViewById(R.id.filteredButton);
+
+        allButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainPresenter.loadPosts(false);
+                disableButtons(true);
+            }
+        });
+
+        filteredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainPresenter.loadPosts(true);
+                disableButtons(true);
+            }
+        });
 
         adapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.title, new String[]{});
         listOfPosts.setAdapter(adapter);
 
-        mainPresenter.loadPosts(); // load posts
+        // mainPresenter.loadPosts(false); // load posts
+    }
+
+    private void disableButtons(boolean disable){
+        allButton.setEnabled(!disable);
+        filteredButton.setEnabled(!disable);
     }
 
     @Override
@@ -54,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updatePosts(List<Post> posts){
+        disableButtons(false);
         updateAdapter(posts);
         Toast.makeText(this, "UI refreshed with datas", Toast.LENGTH_LONG).show();
     }
@@ -61,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private void updateAdapter(List<Post> posts){
         String[] items = new String[posts.size()];
         for(int i = 0; i < posts.size(); i++){
-            items[i] = posts.get(i).title;
+            final Post p = posts.get(i);
+            items[i] = p.title + " (userId = "+p.userId+")";
         }
 
         // monkey update ;)
