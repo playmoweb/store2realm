@@ -124,5 +124,21 @@ public class PostService extends StoreService<Post> {
 ````
 
 
+## Cache and errors
+
+In certain cases, if you use network in a Store and there is no connection, you will have receive an error. The realm service
+won't act as a cache. Store2Store is a syncing system, not a cache for offline usage; if you want to use Store2Realm as a cache
+for your data, you can easily do it passing a second argument (true) to the `observeOn` method.
+
+```
+postService.getAll(filter, sortingMode)
+    .subscribeOn(Schedulers.io())
+    .observeOn(AndroidSchedulers.mainThread(), true) // add true here if you want to delay the error and receive the realm update first
+    ...
+```
+
+You can have a look to the example application in the project to see this in action.
+
+
 ## Contributors
 Please see [CONTRIBUTORS.md](https://github.com/playmoweb/store2realm/blob/master/CONTRIBUTORS.md)
