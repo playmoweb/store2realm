@@ -6,10 +6,24 @@
     android:layout_height="match_parent"
     tools:context="com.playmoweb.store2realm.example.ui.MainActivity">
 
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="#FF44"
+        android:textColor="#FFF"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:text="Network error"/>
+
     <ListView
         android:id="@+id/listOfPosts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/errorMessage"
         android:layout_above="@+id/buttonsContainer"/>
 
     <LinearLayout

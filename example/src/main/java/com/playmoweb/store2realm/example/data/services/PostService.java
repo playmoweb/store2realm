@@ -29,9 +29,8 @@ public class PostService extends StoreService<Post> {
     @Inject
     public PostService(ApiService apiService) {
         super(Post.class, new PostDao(apiService));
-        this.syncWith(new BaseRealmService<>(Post.class, true)); // realm as cache (boolean)
+        this.syncWith(new BaseRealmService<>(Post.class)); // realm as cache (boolean)
     }
-
 
     /**
      * Post DAO impl
