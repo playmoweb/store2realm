@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface MainView {
     void updatePosts(List<Post> posts);
+
+    void showError(String message);
 }

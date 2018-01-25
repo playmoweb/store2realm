@@ -20,17 +20,18 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
- * @author  Thibaud Giovannetti
- * @by      Playmoweb
- * @date    10/09/2017
+ * @author Thibaud Giovannetti
+ * @by Playmoweb
+ * @date 10/09/2017
  */
 public class PostService extends StoreService<Post> {
 
     @Inject
     public PostService(ApiService apiService) {
         super(Post.class, new PostDao(apiService));
-        this.syncWith(new BaseRealmService<>(Post.class));
+        this.syncWith(new BaseRealmService<>(Post.class, true)); // realm as cache (boolean)
     }
+
 
     /**
      * Post DAO impl
@@ -48,7 +49,7 @@ public class PostService extends StoreService<Post> {
             // this IF case is here only to demonstrate the usage of filtering and sorting mode in the UI
             // this logic should be on the server side and not here !
             // !!!! The filter and the sort are hardcoded here (to match presenter choices).
-            if(sortingMode != null && filter != null){
+            if (sortingMode != null && filter != null) {
                 final int userIdAllowed = (int) filter.entrySet().iterator().next().getValue().value;
 
                 // special return for demo

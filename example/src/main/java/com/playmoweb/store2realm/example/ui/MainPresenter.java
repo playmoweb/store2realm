@@ -57,17 +57,21 @@ public class MainPresenter {
                 .subscribeWith(new DisposableSubscriber<Optional<List<Post>>>(){
                     @Override
                     public void onNext(Optional<List<Post>> items) {
-                        mainView.updatePosts(items.get());
+                        if(!items.isNull()){
+                            mainView.updatePosts(items.get());
+                        } else {
+                            // show up network error (syncing error on your PostService Store)
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        mainView.updatePosts(null);
                     }
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
 
