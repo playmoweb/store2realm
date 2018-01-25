@@ -67,11 +67,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
         listOfPosts.setAdapter(adapter);
 
         // mainPresenter.loadPosts(false); // load posts
+        mainPresenter.loadPosts(false);
     }
 
     private void disableButtons(boolean disable){
         allButton.setEnabled(!disable);
         filteredButton.setEnabled(!disable);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
     }
 
     @Override
@@ -87,7 +93,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
         Toast.makeText(this, "UI refreshed with datas", Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     private void updateAdapter(List<Post> posts){
+        if(posts == null){
+            return;
+        }
+
         String[] items = new String[posts.size()];
         for(int i = 0; i < posts.size(); i++){
             final Post p = posts.get(i);
