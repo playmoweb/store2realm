@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.playmoweb.store2realm.example.ExampleApplication;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private ListView listOfPosts;
     private Button allButton;
     private Button filteredButton;
+    private TextView errorMessage;
 
     private ArrayAdapter<String> adapter;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         listOfPosts = findViewById(R.id.listOfPosts);
         allButton = findViewById(R.id.allButton);
         filteredButton = findViewById(R.id.filteredButton);
+        errorMessage = findViewById(R.id.errorMessage);
 
         allButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +93,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void updatePosts(List<Post> posts){
         disableButtons(false);
         updateAdapter(posts);
-        Toast.makeText(this, "UI refreshed with datas", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "UI updated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showError(String message) {
+        errorMessage.setVisibility(View.VISIBLE);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void hideError() {
+        errorMessage.setVisibility(View.GONE);
     }
 
     private void updateAdapter(List<Post> posts){

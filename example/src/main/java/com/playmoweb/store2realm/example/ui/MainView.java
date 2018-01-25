@@ -13,4 +13,5 @@ public interface MainView {
     void updatePosts(List<Post> posts);
 
     void showError(String message);
+    void hideError();
 }

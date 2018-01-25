@@ -44,6 +44,8 @@ public class MainPresenter {
     }
 
     public void loadPosts(boolean filterAndSortPosts) {
+        mainView.hideError();
+
         SortingMode sortingMode = null;
         Filter filter = null;
         if(filterAndSortPosts){
@@ -53,14 +55,12 @@ public class MainPresenter {
 
         Disposable d = postService.getAll(filter, sortingMode)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread(), true) // add true here if you want to delay the error
                 .subscribeWith(new DisposableSubscriber<Optional<List<Post>>>(){
                     @Override
                     public void onNext(Optional<List<Post>> items) {
                         if(!items.isNull()){
                             mainView.updatePosts(items.get());
-                        } else {
-                            // show up network error (syncing error on your PostService Store)
                         }
                     }
 
@@ -68,10 +68,12 @@ public class MainPresenter {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         mainView.updatePosts(null);
+                        mainView.showError("Network error");
                     }
 
                     @Override
                     public void onComplete() {
+                        mainView.hideError();
                     }
                 });
 
