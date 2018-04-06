@@ -376,7 +376,7 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
     private RealmResults<T> applySortingMode(SortingMode sm, RealmQuery<T> query){
         KeysAndSorts keysAndSorts = convertSortingMode(sm);
         if(keysAndSorts != null){
-            return query.findAllSortedAsync(keysAndSorts.key, keysAndSorts.sort);
+            return query.findAllSorted(keysAndSorts.key, keysAndSorts.sort);
         }
         return query.findAll();
     }
