@@ -4,7 +4,6 @@ import com.playmoweb.store2realm.model.HasId;
 import com.playmoweb.store2store.store.Optional;
 import com.playmoweb.store2store.store.StoreDao;
 import com.playmoweb.store2store.utils.Filter;
-import com.playmoweb.store2store.utils.FilterType;
 import com.playmoweb.store2store.utils.SortType;
 import com.playmoweb.store2store.utils.SortingMode;
 
@@ -105,7 +104,7 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
 
     @Override
     public Flowable<Optional<T>> getOne(T item) {
-        return getOne(new Filter(item.getUniqueIdentifierName(), FilterType.EQUAL), null);
+        return getOne(new Filter(item.getUniqueIdentifierName(), item.getUniqueIdentifier()), null);
     }
 
     /**
