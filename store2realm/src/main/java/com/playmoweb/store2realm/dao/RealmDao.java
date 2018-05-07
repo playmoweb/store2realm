@@ -62,11 +62,17 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
 
         if(items.size() > 0){
             String paramName = items.get(0).getUniqueIdentifierName();
-            Integer[] keys = new Integer[items.size()];
+            Object[] keys = new Object[items.size()];
             for(int i = 0; i < items.size(); i++){
                 keys[i] = items.get(i).getUniqueIdentifier();
             }
-            query.in(paramName, keys);
+
+            Object valueType = items.get(0).getUniqueIdentifier();
+            if(valueType instanceof String){
+                query.in(paramName, (String[]) keys);
+            } else if(valueType instanceof Integer){
+                query.in(paramName, (Integer[]) keys);
+            }
         }
 
         List<T> copies = realm.copyFromRealm(query.findAll());
