@@ -24,7 +24,7 @@ allprojects {
 
 ```
 # app/build.gradle file
-compile 'com.github.playmoweb:store2realm:<TAG>'
+compile "com.github.playmoweb:store2realm:<TAG>"
 ```
 
 
@@ -60,7 +60,7 @@ We implement the getAll method from the RealmService to point to our API. This m
 @Parcel(implementations = { PostRealmProxy.class },
         value = Parcel.Serialization.BEAN,
         analyze = { Post.class })
-public class Post extends RealmObject implements HasId {
+public class Post extends RealmObject implements HasId<Integer | String> {
     // ...
 }
 
@@ -139,6 +139,10 @@ postService.getAll(filter, sortingMode)
 
 You can have a look to the example application in the project to see this in action.
 
+
+## Custom id
+
+If you need to use custom identifier (primary key), for now in version 3.x you should implement HasId<TYPE> and if the name is different than "id", call setIdKey("name") in your store.
 
 ## Contributors
 Please see [CONTRIBUTORS.md](https://github.com/playmoweb/store2realm/blob/master/CONTRIBUTORS.md)
