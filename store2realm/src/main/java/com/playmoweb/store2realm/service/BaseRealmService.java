@@ -23,4 +23,8 @@ public class BaseRealmService<T extends RealmObject & HasId> extends StoreServic
     public BaseRealmService(Class<T> clazz) {
         super(clazz, new RealmDao<>(clazz));
     }
+
+    public void setIdKey(String name){
+        ((RealmDao) getDao()).setIdKey(name);
+    }
 }

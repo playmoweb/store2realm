@@ -28,9 +28,15 @@ import io.realm.Sort;
  */
 public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
     protected  Class<T> clazz;
+    protected String idKey = "id";
 
     public RealmDao(Class<T> clazz) {
         this.clazz = clazz;
+    }
+
+    public RealmDao<T> setIdKey(String idKey) {
+        this.idKey = idKey;
+        return this;
     }
 
     /**
@@ -119,8 +125,8 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
      * @return
      */
     @Override
-    public Flowable<Optional<T>> getById(int id) {
-        return getOne(new Filter("id", id), null);
+    public <S> Flowable<Optional<T>> getById(S id) {
+        return getOne(new Filter(idKey, id), null);
     }
 
     /**
