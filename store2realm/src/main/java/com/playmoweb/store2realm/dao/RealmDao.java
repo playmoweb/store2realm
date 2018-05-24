@@ -359,17 +359,17 @@ public class RealmDao<T extends RealmObject & HasId> extends StoreDao<T> {
                     return query.greaterThanOrEqualTo(key, (Byte) kvp.value);
             case LESS_THAN_OR_EQUAL:
                 if(kvp.value instanceof Integer)
-                    return query.greaterThanOrEqualTo(key, (Integer) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Integer) kvp.value);
                 if(kvp.value instanceof Double)
-                    return query.greaterThanOrEqualTo(key, (Double) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Double) kvp.value);
                 if(kvp.value instanceof Date)
-                    return query.greaterThanOrEqualTo(key, (Date) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Date) kvp.value);
                 if(kvp.value instanceof Float)
-                    return query.greaterThanOrEqualTo(key, (Float) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Float) kvp.value);
                 if(kvp.value instanceof Long)
-                    return query.greaterThanOrEqualTo(key, (Long) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Long) kvp.value);
                 if(kvp.value instanceof Byte)
-                    return query.greaterThanOrEqualTo(key, (Byte) kvp.value);
+                    return query.lessThanOrEqualTo(key, (Byte) kvp.value);
         }
 
         throw new UnknownFormatFlagsException("Instance of the value is unknow or this type is unknow : " + kvp.filterType.toString());
