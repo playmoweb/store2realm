@@ -7,7 +7,6 @@ apply plugin: 'realm-android'
 android {
     namespace 'com.playmoweb.store2realm.example'
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.playmoweb.store2realm.example"
