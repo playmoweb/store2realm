@@ -3,7 +3,7 @@ apply plugin: 'realm-android'
 apply plugin: 'maven-publish'
 
 android {
-    namespace 'com.playmoweb.store2realm.example'
+    namespace 'com.playmoweb.store2realm'
     compileSdkVersion 34
 
     defaultConfig {
