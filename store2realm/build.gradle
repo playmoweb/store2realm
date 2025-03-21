@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'realm-android'
+apply plugin: 'maven-publish'
 
 android {
+    namespace 'com.playmoweb.store2realm.example'
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 35
         versionCode 304
         versionName "3.0.4"
 

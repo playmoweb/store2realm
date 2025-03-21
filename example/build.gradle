@@ -1,19 +1,21 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
+
 apply plugin: 'realm-android'
 
 android {
+    namespace 'com.playmoweb.store2realm.example'
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.playmoweb.store2realm.example"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -40,25 +42,25 @@ android {
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile project(":store2realm") // use local library
+    implementation project(":store2realm") // use local library
     // compile 'com.github.playmoweb:store2realm:3.0.0'
 
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile "com.google.dagger:dagger:2.10"
+    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.google.dagger:dagger:2.10"
     annotationProcessor "com.google.dagger:dagger-compiler:2.10"
-    compile "com.squareup.retrofit2:retrofit:2.3.0"
-    compile "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
-    compile "com.squareup.retrofit2:converter-gson:2.3.0"
-    compile "com.squareup.okhttp3:okhttp:3.4.1"
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile "org.parceler:parceler-api:1.1.5"
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    implementation "com.squareup.okhttp3:okhttp:3.4.1"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation "org.parceler:parceler-api:1.1.5"
     annotationProcessor "org.parceler:parceler:1.1.5"
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    testCompile 'junit:junit:4.12'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    testImplementation 'junit:junit:4.12'
 }
