@@ -33,3 +33,17 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     testImplementation 'junit:junit:4.12'
 }
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.github.playmoweb'
+            artifactId = 'store2realm'
+            version = '3.1.2'
+
+            afterEvaluate {
+                from components.release
+            }
+        }
+    }
+}
