@@ -39,7 +39,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.playmoweb'
             artifactId = 'store2realm'
-            version = '3.1.0'
+            version = '3.1.2'
 
             afterEvaluate {
                 from components.release
